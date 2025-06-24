@@ -1,0 +1,31 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": [
+      "local>KD_ESTA/esta-renovate-preset"
+    ],
+    "branchPrefix": "renovate/",
+    "dependencyDashboard": false,
+    "ignoreDeps": ["python"],
+    "packageRules": [
+      {
+        "groupName": "all non-major dependencies",
+        "groupSlug": "all-minor-patch",
+        "matchPackagePatterns": [
+          "*"
+        ],
+        "matchUpdateTypes": [
+          "minor",
+          "patch"
+        ]
+      }
+    ],
+    "customManagers": [
+      {
+        "customType": "regex",
+        "fileMatch": ["^docker/Dockerfile$"],
+        "matchStrings": ["POETRY_VERSION=\"(?<currentValue>.+)\""],
+        "depNameTemplate": "poetry",
+        "datasourceTemplate": "pypi"
+      }
+    ]
+}

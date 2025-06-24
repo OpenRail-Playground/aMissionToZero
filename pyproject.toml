@@ -1,0 +1,98 @@
+[project]
+# we prefix the package name with `sbb-` to defend against dependency confusion, see https://confluence.sbb.ch/x/Fxa9lg
+name = "aMissionToZero"
+description = "CO2 Reporting Dashboard for B2B Sales"
+authors = [
+    {name = "Sanelma Heinonen", email = "sanelma.heinonen@sbb.ch"}
+]
+readme = "README.md"
+license = "Proprietary"
+dynamic = ["version", "dependencies"]
+requires-python = "~3.11"
+
+[project.urls]
+repository = "https://github.com/OpenRail-Playground/aMissionToZero"
+
+[tool.poetry]
+version = "0.0.0" # Version is ignored and set by Tekton. Use pipeline to increase.
+packages = [{include = "amissiontozero", from = "src"}]
+
+[tool.poetry.dependencies]
+numpy = "~2.2.0"                                     # NumPy is the fundamental package for array computing with Python.
+streamlit = "^1.45.1"
+plotly = "^6.1.2"
+snowflake-snowpark-python = "^1.32.0"
+nbformat = "^5.10.4"
+matplotlib = "^3.10.3"
+pandas-stubs = "^2.2.3.250527"
+openpyxl = "^3.1.5"
+
+[tool.poetry.group.dev.dependencies]
+black = "~25.1.0"                                       # The uncompromising code formatter.
+coverage = {extras = ["toml"], version = "~7.8.0"}    # Code coverage measurement for Python
+unittest-xml-reporting = "~3.2"                     # unittest-based test runner with Ant/JUnit like XML reporting.
+pre-commit = "~4.2.0"                                 # A framework for managing and maintaining multi-language pre-commit hooks.
+pre-commit-hooks = "~5.0.0"                           # Some out-of-the-box hooks for pre-commit.
+pydocstyle = "~6.3"                                 # Python docstring style checker
+pylint = "~3.3.0"                                    # python code static checker
+pylint-sonarjson = "~2.0.0"                           # Plugin for pylint to export severities of issues to sonar
+isort = "~6.0.0"                                     # Tool for reordering python imports
+mypy = "~1.16.0"                                       # Tool for static type-checking
+ipykernel = "^6.29.5"
+[tool.poetry.scripts]
+entrypoint = 'aMissionToZero.main:cli'
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+profile = "black"
+
+[tool.pylint.main]
+load-plugins = "pylint_sonarjson"
+fail-on = "F,E,W"
+fail-under = 0.0
+
+[tool.pylint.basic]
+good-names = ["i", "j", "k", "n", "s", "d", "ex", "Run", "_", "pk", "x", "y", "df"]
+
+[tool.pylint.format]
+max-line-length = 140
+max-args = 8
+
+[tool.pylint.messages_control]
+disable = [
+    # pydocstyle takes care of this...
+    "missing-module-docstring",
+    "missing-function-docstring",
+    "missing-class-docstring",
+
+    # don't hinder me creating small classes!
+    "too-few-public-methods",
+
+    # reorder-python-imports should know what it's doing
+    "wrong-import-order",
+
+    # can't do much about duplicate imports in two files, I'm afraid...
+    "duplicate-code",
+]
+
+[tool.pylint.miscellaneous]
+notes = []  # don't warn about `TODO` and `FIXME` comments
+
+[tool.pylint.reports]
+output-format = "sonarjson:./sonar_report.json,text"
+
+[tool.mypy]
+python_version = "3.11"
+plugins = "numpy.typing.mypy_plugin"
+strict = true
+
+[tool.pydocstyle]
+match-dir = "[^\\.][^test].*"
+convention = "google"
+
+[tool.coverage.run]
+command_line = "-m xmlrunner discover --output-file junittest.xml"
+

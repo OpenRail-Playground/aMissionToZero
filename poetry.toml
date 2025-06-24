@@ -1,0 +1,11 @@
+# The following is important for the Tekton build: Only the working directory
+# is transferred between Tekton steps, e.g. between the "prepare" and "build"
+# steps in the Python build. Thus we instruct poetry to install the dependencies
+# into a .venv directory in the working directory instead of into a global directory.
+
+[virtualenvs]
+create = true
+in-project = true
+
+[repositories.artifactory]
+url = "https://bin.sbb.ch/artifactory/api/pypi/"
