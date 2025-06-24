@@ -95,4 +95,3 @@ convention = "google"
 
 [tool.coverage.run]
 command_line = "-m xmlrunner discover --output-file junittest.xml"
-

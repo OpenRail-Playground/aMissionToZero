@@ -2,9 +2,9 @@
 
 import logging
 import os
-import pandas as pd
-import numpy as np
 
+import numpy as np
+import pandas as pd
 import snowflake
 import streamlit as st
 from snowflake.snowpark import Session
