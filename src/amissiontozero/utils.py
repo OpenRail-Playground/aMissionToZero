@@ -12,8 +12,40 @@ from snowflake.snowpark import Session
 LOGGER = logging.getLogger(__name__)
 
 
+def filter_zeitraum(data, zeitraum_selected):
+    """Filters data based on given zeitraum.
+
+    params:
+    - data (pd.DataFrame): pd.DataFrame
+    - zeitraum_selected (str): either "Year To Date", "3 months", or "All"
+
+    Returns:
+    pd.DataFrame
+    """
+    today = pd.Timestamp.today()
+
+    if zeitraum_selected == "Year To Date":
+        start_date = pd.Timestamp(year=today.year, month=1, day=1)
+        df_filtered = data[data["Hinreisedatum"] >= start_date]
+
+    elif zeitraum_selected == "3 months":
+        start_date = today - pd.DateOffset(months=3)
+        df_filtered = data[data["Hinreisedatum"] >= start_date]
+
+    else:  # "All"
+        df_filtered = data.copy()
+    return df_filtered
+
+
 # based on Betrag, done as in Basic Emissions Report excel
 def calculate_kilometer(row):
+    """Calculates kilometers based on betrag, reiseklasse, and reduktion.
+
+    params:
+    row (pd.DataFrame row):
+    returns:
+    int
+    """
     betrag = row["Betrag"]
     reiseklasse = row["Reiseklasse"]
     reduktion = row["Reduktion"]
@@ -48,6 +80,13 @@ def calculate_kilometer(row):
 
 
 def calculate_emission(row):
+    """Calculates co2 emissions (kg) based on kilometers, and ticket type (RUMBA-Artikel).
+
+    params:
+    row (pd.DataFrame row):
+    returns:
+    int
+    """
     artikel = row["RUMBA-Artikel"]
     km = row["kilometer"]
 
@@ -62,6 +101,13 @@ def calculate_emission(row):
 
 
 def calculate_energy_mj_equiv_per_km(data):
+    """Calculates energy (mj) based on kilometer and ticket type.
+
+    params:
+    row (pd.DataFrame row):
+    returns:
+    int
+    """
     conditions = [
         data["RUMBA-Artikel"] == "Tickets Inland",
         data["RUMBA-Artikel"] == "GA",
