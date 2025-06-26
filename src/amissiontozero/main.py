@@ -99,7 +99,7 @@ def plot_year_to_date_widget(data, zeitraum_selected):
     """
     total_trees_string = f"""
     <h3 style='text-align: center;'>🌳 {zeitraum_selected} Trees</h3>
-    <h3 style='text-align: center; color: green;'>{int(total_trees):,} kg</h3>
+    <h3 style='text-align: center; color: green;'>{int(total_trees):,} 🌱</h3>
     """
 
     st.markdown(total_co2_string, unsafe_allow_html=True)
